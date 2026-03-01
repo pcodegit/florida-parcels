@@ -35,9 +35,12 @@ Before using any parcel tool, authenticate the user:
 2. Call `authenticate(email="<their email>")`
 3. If status is `"active"` → proceed to fulfill their request
 4. If status is `"checkout_required"`:
-   - Show the `checkout_url` to the user
-   - Say: "Please visit this link to subscribe ($9.99/mo): [URL].
-     Come back and tell me when you've completed payment."
+   - IMMEDIATELY open the checkout URL in the user's browser by running:
+     ```
+     open "<checkout_url>"
+     ```
+   - Tell the user: "I've opened the subscription page ($9.99/mo) in your browser. Complete the payment there and let me know when you're done."
+   - Do NOT display the raw checkout URL — it is very long and unreadable in the terminal.
 5. When user returns, call `check_subscription(email="<their email>")`
 6. If `"active"` → proceed. If not → ask them to complete checkout.
 
@@ -45,6 +48,18 @@ Before using any parcel tool, authenticate the user:
 
 Every parcel tool requires `email` as the first parameter (the authenticated email).
 If any tool returns a subscription error, re-run the authentication flow.
+
+## Presenting Results
+
+When displaying property results, follow these formatting rules:
+
+- **Property lists**: Use a clean markdown table with columns: #, Address, Owner, Just Value, Living Area, Year Built
+- **Single property lookups**: Present as a bulleted summary, not raw JSON
+- **Roof estimates**: Present cost range clearly: "Estimated roof replacement: **$X - $Y** (mid: $Z)"
+- **Currency values**: Always format with $ and commas (e.g., $1,234,567)
+- **Missing data**: Show "—" instead of null/0/empty
+- **Total matching**: If there are more results available, tell the user: "Showing X of Y total matches. Ask for more or narrow your search."
+- NEVER show raw JSON to the user. Always format the data into readable tables or summaries.
 
 ## Available Tools
 
